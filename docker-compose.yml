@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+
+  flask-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    container_name: flask-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+
+  streamlit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: streamlit-app
+    ports:
+      - "8501:8501" 
+    depends_on:
+      - flask-app
+
+volumes:
+  mongo_data:
